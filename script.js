@@ -25,8 +25,7 @@ function getPlayerNumber(char="X"){
 
 //function to display gameboard and make the form dissapear
 function displayGame(){
-    document.querySelector(".gameBoard").style.display="grid";
-    document.querySelector("#optionButtons").style.display="block";
+    document.querySelector(".gameScreen").style.display="flex";
     document.querySelector(".setName").style.display="none";
 }
 
@@ -38,11 +37,14 @@ const gameBoardModule=(()=>{
     const gameBoard = document.querySelector(".gameBoard");
     let player1,player2;
     const setPlayers = (name1="",name2="")=>{
-        player1= Player(name1,1);
-        player2= Player(name2,2);
+        player1= Player(name1.toUpperCase(),1);
+        player2= Player(name2.toUpperCase(),2);
     }
     let gameBoardArray=[];
     const createNewGameBoard=()=>{
+        playerOneTurn=true;
+        document.querySelector("#victoryText").
+        textContent="";
         gameBoard.innerHTML="";
         for(let i=0;i<NUMBEROFSQUARES;i++){
         const cell = document.createElement("button");
@@ -63,7 +65,18 @@ const gameBoardModule=(()=>{
         }
         setDisplay();
         if(checkWinner(gameBoardArray)!==false){
-            console.log(checkWinner(gameBoardArray));
+            if(checkWinner(gameBoardArray)==="tie"){
+                document.querySelector("#victoryText").
+                textContent="Match tied";
+            }else{
+            document.querySelector("#victoryText").
+            textContent=getPlayer(checkWinner(gameBoardArray)).name+" Wins";
+            }
+            const cells =document.querySelectorAll(".cells");
+            cells.forEach((cell)=>{
+                let new_element = cell.cloneNode(true);
+                cell.parentNode.replaceChild(new_element, cell);
+            });
         };
         playerOneTurn=!playerOneTurn;
     }
@@ -122,21 +135,21 @@ function checkWinner(gameBoard=[]){
     for(let i =0;i<gameBoard.length;i+=3){
         if(gameBoard[i]===gameBoard[i+1]&&
             gameBoard[i+2]===gameBoard[i]&&
-            gameBoard[i]!=="")return gameBoard[i];
+            gameBoard[i]!=="")return getPlayerNumber(gameBoard[i]);
             
     }
     //row wise
     for(let i=0;i<3;i++){
         if(gameBoard[i]===gameBoard[i+3]&&
             gameBoard[i+6]===gameBoard[i]&&
-            gameBoard[i]!=="")return gameBoard[i];
+            gameBoard[i]!=="") return getPlayerNumber(gameBoard[i]);
             
     }
     //diagonally
     if(gameBoard[0]===gameBoard[4]&&gameBoard[8]===gameBoard[0]
-        &&gameBoard[0]!=="")return gameBoard[0];
+        &&gameBoard[0]!=="")return getPlayerNumber(gameBoard[0]);
     if(gameBoard[2]===gameBoard[4]&&gameBoard[6]===gameBoard[2]
-        &&gameBoard[2]!=="")return gameBoard[4];
+        &&gameBoard[2]!=="")return getPlayerNumber(gameBoard[4]);
     //check for tie    
     let count=0;
     for(let cell in gameBoard){
@@ -148,20 +161,17 @@ function checkWinner(gameBoard=[]){
     }
 //Reset names button
 document.querySelector("#resetNames").addEventListener("click",()=>{
-    document.querySelector(".gameBoard").style.display="none";
-    document.querySelector("#optionButtons").style.display="none";
-    document.querySelector("#headerText").style.display="none";
+    document.querySelector(".gameScreen").style.display="none";
     document.querySelector(".setName").style.display="block";
 });
 
 //Restart button
 document.querySelector("#restart").addEventListener("click",()=>{
     gameBoardModule.createNewGameBoard();
-    playerOneTurn=true;
 });
 //Events 
-document.querySelector(".gameBoard").style.display="none";
-document.querySelector("#optionButtons").style.display="none";
+document.querySelector(".gameScreen").style.display="none";
+
 
 }
 
