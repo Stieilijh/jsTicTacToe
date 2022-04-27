@@ -11,17 +11,19 @@
 <body>
     <h1>Tic Tac Toe</h1>
     <div class="setName">
-        <form onsubmit="" id="setNameForm" >
+        <form onsubmit="" id="setNameForm" autocomplete="off">
             <h3>Set Player Names</h3>
             <input type="text" required maxlength="20" placeholder="Player-1 Name" id="player1Name">
             <input type="text" required maxlength="20" placeholder="Player-2 Name" id="player2Name">
             <input type="submit"></input>
         </form>
     </div>
+    <div class="gameScreen">
+    <div id="headerText"></div>
     <div class="gameBoard"></div>
     <div id="optionButtons">
     <button id="restart">Restart</button>
     <button id="resetNames"> Reset Names</button>
-    </div>
+    </div></div>
 </body>
 </html>

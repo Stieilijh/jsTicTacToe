@@ -2,16 +2,25 @@ const NUMBEROFSQUARES =9;
 let playerOneTurn =true;
 
 const Player =(name,playerNumber)=>{
+    const player1char = "X";
+    const player2char = "O";
     const getPlayerChar =()=>{
         if(playerNumber==1){
-            return "X";
+            return player1char;
         }else if(playerNumber==2){
-            return "O";
+            return player2char;
         }else{
             throw new Error(" Invalid playerNumber is "+playerNumber);
         }
     }
     return {name,getPlayerChar};
+}
+
+//get player number from the symbol
+function getPlayerNumber(char="X"){
+    if(char==="X")return 1 ;
+    else if(char ==="O") return 2;
+    else throw new Error("PlayerNumber for this char"+char +" does not exist");
 }
 
 //function to display gameboard and make the form dissapear
@@ -46,13 +55,18 @@ const gameBoardModule=(()=>{
     }
     const addListnerToCell=(event)=>{
         const index=event.target.id[4];
+        if(gameBoardArray[index]===""){
         if(playerOneTurn){
             gameBoardArray[index]=player1.getPlayerChar();
         }else{
             gameBoardArray[index]=player2.getPlayerChar();
         }
-        playerOneTurn=!playerOneTurn;
         setDisplay();
+        if(checkWinner(gameBoardArray)!==false){
+            console.log(checkWinner(gameBoardArray));
+        };
+        playerOneTurn=!playerOneTurn;
+    }
     }
     const setDisplay=()=>{
         const cells =document.querySelectorAll(".cells");
@@ -89,13 +103,54 @@ document.querySelector("#setNameForm").addEventListener("submit",(event)=>{
     player2Name=document.querySelector("#player2Name").value;
     gameBoardModule.setPlayers(player1Name,player2Name);
     displayGame();
+    displayHeaderText();
     gameBoardModule.createNewGameBoard();
     document.querySelector("#setNameForm").reset();
 });
-//reset names button
+//function that displays/changes the headertext of gameBoard
+function displayHeaderText(){
+    const headerText = document.querySelector("#headerText");
+    headerText.textContent=player1Name+"  VS  "+player2Name;
+}
+//checks if a person has won the match
+function checkWinner(gameBoard=[]){
+    
+    if(!gameBoard.length===9){
+        throw new Error("Length of gameboard not 9");
+    }
+    //column wise
+    for(let i =0;i<gameBoard.length;i+=3){
+        if(gameBoard[i]===gameBoard[i+1]&&
+            gameBoard[i+2]===gameBoard[i]&&
+            gameBoard[i]!=="")return gameBoard[i];
+            
+    }
+    //row wise
+    for(let i=0;i<3;i++){
+        if(gameBoard[i]===gameBoard[i+3]&&
+            gameBoard[i+6]===gameBoard[i]&&
+            gameBoard[i]!=="")return gameBoard[i];
+            
+    }
+    //diagonally
+    if(gameBoard[0]===gameBoard[4]&&gameBoard[8]===gameBoard[0]
+        &&gameBoard[0]!=="")return gameBoard[0];
+    if(gameBoard[2]===gameBoard[4]&&gameBoard[6]===gameBoard[2]
+        &&gameBoard[2]!=="")return gameBoard[4];
+    //check for tie    
+    let count=0;
+    for(let cell in gameBoard){
+        if(gameBoard[cell]!=="")count++;
+    }
+    if(count===9)return "tie";
+    
+    return  false;
+    }
+//Reset names button
 document.querySelector("#resetNames").addEventListener("click",()=>{
     document.querySelector(".gameBoard").style.display="none";
     document.querySelector("#optionButtons").style.display="none";
+    document.querySelector("#headerText").style.display="none";
     document.querySelector(".setName").style.display="block";
 });
 
@@ -107,4 +162,7 @@ document.querySelector("#restart").addEventListener("click",()=>{
 //Events 
 document.querySelector(".gameBoard").style.display="none";
 document.querySelector("#optionButtons").style.display="none";
+
 }
+
+//minimax algorithm for the difficult cpu
