@@ -1,0 +1,14 @@
+body{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+.gameBoard{
+width: 350px;
+height: 300px;
+border: 2px  solid black;
+display: grid;
+grid-template-columns: repeat(3,1fr);
+grid-template-rows: repeat(3,1fr);
+}
