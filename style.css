@@ -4,6 +4,11 @@ body{
     flex-direction: column;
     gap: 30px;
     align-items: center;
+
+}
+form>input,#optionButtons>button{
+    font-family: "cursive",sans-serif;
+    font-size:1.2em ;
 }
 .gameBoard{
 width: 350px;
@@ -14,7 +19,7 @@ grid-template-columns: repeat(3,1fr);
 grid-template-rows: repeat(3,1fr);
 /*text*/
 }
-button{
+.gameBoard>button{
 font-family: "Water Brush","cursive";
 font-size: 2em;
 font-weight: 600;

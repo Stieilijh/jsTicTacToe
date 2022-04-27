@@ -14,7 +14,15 @@ const Player =(name,playerNumber)=>{
     return {name,getPlayerChar};
 }
 
+//function to display gameboard and make the form dissapear
+function displayGame(){
+    document.querySelector(".gameBoard").style.display="grid";
+    document.querySelector("#optionButtons").style.display="block";
+    document.querySelector(".setName").style.display="none";
+}
+
 window.onload = function(){
+let player1Name,player2Name;
 //gameBoard Module
 
 const gameBoardModule=(()=>{
@@ -63,14 +71,40 @@ const gameBoardModule=(()=>{
     const getGameBoard=()=>{
         return gameBoardArray;
     }
-    return{setPlayers,createNewGameBoard, getCell,setCell,getGameBoard};
+    const getPlayer=(num=1)=>{
+        if(num==1){
+            return player1;
+        }else if(num==2){
+            return player2;
+        }else{
+            throw new Error("Player-"+num+" Doesn't exist");
+        }
+    }
+    return{getPlayer,setPlayers,createNewGameBoard, getCell,setCell,getGameBoard};
 })();
-//
-gameBoardModule.createNewGameBoard();
-gameBoardModule.setPlayers("Jeff","Elon");
-//Restart button
-const restartbtn=document.querySelector("#restart");
-restartbtn.addEventListener("click",()=>{
+//set name form on submit method
+document.querySelector("#setNameForm").addEventListener("submit",(event)=>{
+    event.preventDefault();
+    player1Name=document.querySelector("#player1Name").value;
+    player2Name=document.querySelector("#player2Name").value;
+    gameBoardModule.setPlayers(player1Name,player2Name);
+    displayGame();
     gameBoardModule.createNewGameBoard();
+    document.querySelector("#setNameForm").reset();
 });
+//reset names button
+document.querySelector("#resetNames").addEventListener("click",()=>{
+    document.querySelector(".gameBoard").style.display="none";
+    document.querySelector("#optionButtons").style.display="none";
+    document.querySelector(".setName").style.display="block";
+});
+
+//Restart button
+document.querySelector("#restart").addEventListener("click",()=>{
+    gameBoardModule.createNewGameBoard();
+    playerOneTurn=true;
+});
+//Events 
+document.querySelector(".gameBoard").style.display="none";
+document.querySelector("#optionButtons").style.display="none";
 }
